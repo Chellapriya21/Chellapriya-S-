@@ -1,0 +1,53 @@
+import java.util.HashMap;
+import java.util.Random;
+
+public class LinkShortener {
+    private HashMap<String, String> urlMap;
+    private HashMap<String, String> reverseUrlMap;
+    private String characters;
+    private Random random;
+    private int keyLength;
+
+    public LinkShortener() {
+        urlMap = new HashMap<>();
+        reverseUrlMap = new HashMap<>();
+        characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        random = new Random();
+        keyLength = 6;
+    }
+
+    public String generateShortURL(String longURL) {
+        if (reverseUrlMap.containsKey(longURL)) {
+            return reverseUrlMap.get(longURL);
+        }
+        String shortURL;
+        do {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < keyLength; i++) {
+                sb.append(characters.charAt(random.nextInt(characters.length())));
+            }
+            shortURL = sb.toString();
+        } while (urlMap.containsKey(shortURL));
+        
+        urlMap.put(shortURL, longURL);
+        reverseUrlMap.put(longURL, shortURL);
+        return shortURL;
+    }
+
+    public String getLongURL(String shortURL) {
+        return urlMap.getOrDefault(shortURL, "URL not found");
+    }
+
+    public static void main(String[] args) {
+        LinkShortener linkShortener = new LinkShortener();
+
+        String longURL = "https://www.example.com";
+        String shortURL = linkShortener.generateShortURL(longURL);
+        
+        System.out.println("Generated Short URL: " + shortURL);
+        
+        String retrievedLongURL = linkShortener.getLongURL(shortURL);
+        
+        System.out.println("Retrieved Long URL: " + retrievedLongURL);
+    }
+} 
