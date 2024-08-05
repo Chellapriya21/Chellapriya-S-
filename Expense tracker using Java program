@@ -1,0 +1,131 @@
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Calendar;
+
+class Expense {
+    private double amount;
+    private String category;
+    private Date date;
+    private String description;
+
+    // Constructor
+    public Expense(double amount, String category, Date date, String description) {
+        this.amount = amount;
+        this.category = category;
+        this.date = date;
+        this.description = description;
+    }
+
+    // Getters and setters
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+}
+
+class ExpenseTracker {
+    private ArrayList<Expense> expenses;
+
+    // Constructor
+    public ExpenseTracker() {
+        this.expenses = new ArrayList<>();
+    }
+
+    // Add a new expense
+    public void addExpense(Expense expense) {
+        expenses.add(expense);
+        System.out.println("Expense added successfully!");
+    }
+
+    // Display all expenses
+    public void displayExpenses() {
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses found!");
+            return;
+        }
+
+        System.out.println("All Expenses:");
+        for (Expense expense : expenses) {
+            System.out.println(expense.getAmount() + " | " +
+                    expense.getCategory() + " | " +
+                    expense.getDate() + " | " +
+                    expense.getDescription());
+        }
+    }
+
+    // Calculate total expenses for a specific category
+    public double calculateTotalExpensesByCategory(String category) {
+        double total = 0;
+        for (Expense expense : expenses) {
+            if (expense.getCategory().equalsIgnoreCase(category)) {
+                total += expense.getAmount();
+            }
+        }
+        return total;
+    }
+
+    // Calculate total expenses within a date range
+    public double calculateTotalExpensesByDateRange(Date startDate, Date endDate) {
+        double total = 0;
+        for (Expense expense : expenses) {
+            if (!expense.getDate().before(startDate) && !expense.getDate().after(endDate)) {
+                total += expense.getAmount();
+            }
+        }
+        return total;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Create an instance of ExpenseTracker
+        ExpenseTracker tracker = new ExpenseTracker();
+
+        // Add some sample expenses
+        tracker.addExpense(new Expense(10.50, "Food", new Date(), "Lunch"));
+        tracker.addExpense(new Expense(25.00, "Transportation", new Date(), "Bus fare"));
+
+        // Display all expenses
+        tracker.displayExpenses();
+
+        // Calculate total expenses for a specific category
+        double foodExpenses = tracker.calculateTotalExpensesByCategory("Food");
+        System.out.println("Total Food Expenses: $" + foodExpenses);
+
+        // Calculate total expenses within a date range
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1); // 1 day ago
+        Date startDate = cal.getTime();
+        cal.add(Calendar.DATE, 2); // 1 day in the future from today
+        Date endDate = cal.getTime();
+        
+        double expensesInRange = tracker.calculateTotalExpensesByDateRange(startDate, endDate);
+        System.out.println("Total Expenses within the Date Range: $" + expensesInRange);
+    }
